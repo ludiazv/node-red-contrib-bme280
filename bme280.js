@@ -30,7 +30,8 @@ module.exports = function(RED) {
     node.on('input',function(_msg) {
        if(!node.initialized) return null;
        node.sensor.readSensorData().then(function(data){
-         var msg={topic:"bme280",payload:data};
+         var msg={_msgid:RED.util.generateId(),topic:"bme280",payload:data};
+         data.model=node.type;
          if(node.extra) {
            var pl=msg.payload;
            pl.heatIndex=BME280.calculateHeatIndexCelcius(data.temperature_C,data.humidity);

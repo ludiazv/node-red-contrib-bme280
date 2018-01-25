@@ -5,3 +5,4 @@ debug_key.pub
 .remote-sync.json
 lgin.sh
 ssh_keys.sh
+package-lock.json
