@@ -77,4 +77,5 @@ BPM280 & BME280 has been tested using different breakout from cheap providers. O
 
 
 ## Change log.
+* 0.0.2v Solved npm repository name.
 * 0.0.1v First version
