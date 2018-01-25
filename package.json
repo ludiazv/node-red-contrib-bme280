@@ -1,0 +1,33 @@
+{
+  "name": "node-red-contrib-bme280",
+  "version": "0.0.1",
+  "description": "Node for BME280/BMP280 sensors for SBC GPIOS.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node-red",
+    "rpi",
+    "raspberry",
+    "Beaglebone",
+    "orangepi",
+    "BBB",
+    "Edison",
+    "sensor",
+    "sensors",
+    "temperature",
+    "humidity",
+    "barometer"
+  ],
+  "node-red": {
+    "nodes": {
+      "BME280": "bme280.js"
+    }
+  },
+  "author": "L Diaz",
+  "license": "MIT",
+  "dependencies": {
+    "bme280-sensor": "^0.1.6"
+  }
+
+}
