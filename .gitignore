@@ -5,3 +5,4 @@ node_modules
 .remote-sync.json
 lgin.sh
 package-lock.json
+npm-debug.log

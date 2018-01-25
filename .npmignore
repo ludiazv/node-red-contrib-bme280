@@ -6,3 +6,4 @@ debug_key.pub
 lgin.sh
 ssh_keys.sh
 package-lock.json
+npm-debug.log
