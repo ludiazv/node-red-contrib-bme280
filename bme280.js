@@ -25,8 +25,8 @@ module.exports = function(RED) {
         node.status({fill:"green",shape:"dot",text:node.type+" Initialized!"});
         node.log("Running " + node.type);
     }).catch(function(err) {
-        node.status({fill:"red",shape:"ring",text: "" + err});
-        node.log
+        node.status({fill:"red",shape:"ring",text: "Sensor Init Failed"});
+        node.error("Sensor Init failed ->" + err);
     });
     // trigger measure
     node.on('input',function(_msg) {
