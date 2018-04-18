@@ -3,14 +3,22 @@
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
       <input type="text" id="node-input-name" />
   </div>
+
   <div class="form-row">
       <label for="node-input-bus"><i class="fa fa-microchip"></i> Bus #</label>
       <input type="text" id="node-input-bus" />
   </div>
+
   <div class="form-row">
-      <label for="node-input-radio"><i class="fa fa-microchip"></i> I2C Address</label>
+      <label for="node-input-address"><i class="fa fa-microchip"></i> I2C Address</label>
       <input type="text" id="node-input-address" />
   </div>
+
+  <div class="form-row">
+      <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+      <input type="text" id="node-input-topic">
+  </div>
+
   <div class="form-row">
      <label for="node-input-extra"><i class="fa fa-check"></i> Extra Data</label>
      <input type="checkbox" id="node-input-extra" style="width: 60%;" />
@@ -20,16 +28,17 @@
 <script type="text/javascript">
   RED.nodes.registerType("Bme280", {
     category: "input",
-    color:"#DAC4B4",
-    icon:"bridge.png",
+    color:"#E6E0F8",
+    icon:"bme280.png",
     defaults: {
       name:  {value:"", required: false},
       bus:   {value:"1", required: true, validate: RED.validators.number() },
       address: {value: "0x76", required:true, validate: function(v) {
         var n=parseInt(v,16);
         return v.length==4 && v[0]=="0" && v[1].toUpperCase()=="X" && !isNan(n) &&
-        v>=0x10 && v<0x78;
+        n>=0x10 && n<0x78;
       }},
+      topic: {value:'bme280', required:false },
       extra:{value:false, required: true}
     },
     outputs:1,
@@ -37,6 +46,7 @@
     label: function() {
       return this.name ? this.name : "Bme280";
     },
+    labelStyle: function() { return this.name ? "node_label_italic" : "";},
     outputLabels: ["Incoming Payloads"],
     inputLabels: ["Trigger"]
   });

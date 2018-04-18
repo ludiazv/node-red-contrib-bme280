@@ -10,6 +10,7 @@ module.exports = function(RED) {
 
     node.bus=parseInt(n.bus);
     node.addr=parseInt(n.address,16);
+    node.topic= n.topic || "";
     node.extra=n.extra || false;
     node.initialized=false;
 
@@ -25,13 +26,16 @@ module.exports = function(RED) {
         node.log("Running " + node.type);
     }).catch(function(err) {
         node.status({fill:"red",shape:"ring",text: "" + err});
+        node.log
     });
     // trigger measure
     node.on('input',function(_msg) {
        if(!node.initialized) return null;
        node.sensor.readSensorData().then(function(data){
-         var msg={_msgid:RED.util.generateId(),topic:"bme280",payload:data};
+         //var msg={_msgid:RED.util.generateId(),topic:"bme280",payload:data};
+         _msg.payload=data;
          data.model=node.type;
+         if(node.topic !== undefined && node.topic != "") _msg.topic=node.topic;
          if(node.extra) {
            var pl=msg.payload;
            pl.heatIndex=BME280.calculateHeatIndexCelcius(data.temperature_C,data.humidity);
@@ -40,10 +44,11 @@ module.exports = function(RED) {
            pl.temperature_F=BME280.convertCelciusToFahrenheit(data.temperature_C);
            pl.pressure_Hg=BME280.convertHectopascalToInchesOfMercury(data.pressure_hPa);
          }
-         node.send(msg);
+         node.send(_msg);
          node.status({fill:"green",shape:"dot",text:node.type+" T:"+Math.floor(data.temperature_C)+"C/ H%:" + Math.floor(data.humidity) +"%"});
        }).catch(function(err) {
-         node.status({fill:"red",shape:"ring",text:""+err});
+         node.status({fill:"red",shape:"ring",text:"Sensor reading failed"});
+         node.error("Failed to read data ->" + err);
        });
        return null;
     });
