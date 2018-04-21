@@ -35,11 +35,14 @@ module.exports = function(RED) {
          //var msg={_msgid:RED.util.generateId(),topic:"bme280",payload:data};
          _msg.payload=data;
          data.model=node.type;
+         if(node.type != "BME280" && _msg.payload.humidity !== undefined) delete _msg.payload.humidity;
          if(node.topic !== undefined && node.topic != "") _msg.topic=node.topic;
          if(node.extra) {
-           var pl=msg.payload;
-           pl.heatIndex=BME280.calculateHeatIndexCelcius(data.temperature_C,data.humidity);
-           pl.dewPoint_C=BME280.calculateDewPointCelcius(data.temperature_C,data.humidity);
+           var pl=_msg.payload;
+           if(node.type == "BME280") {
+             pl.heatIndex=BME280.calculateHeatIndexCelcius(data.temperature_C,data.humidity);
+             pl.dewPoint_C=BME280.calculateDewPointCelcius(data.temperature_C,data.humidity);
+           }
            pl.altitude_M=BME280.calculateAltitudeMeters(data.pressure_hPa,0);
            pl.temperature_F=BME280.convertCelciusToFahrenheit(data.temperature_C);
            pl.pressure_Hg=BME280.convertHectopascalToInchesOfMercury(data.pressure_hPa);

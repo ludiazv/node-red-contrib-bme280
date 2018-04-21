@@ -7,7 +7,7 @@ The package provide a single custom node __Bme280__ that can be used directly in
 
 ## Installation
 
-Under your node-red working directory.
+Under your node-red (typically ``$HOME/.node-red``) working directory.
 
 ``
 npm install node-red-contrib-bme280
@@ -35,25 +35,25 @@ After installation place your Bme280 node in any of your flow and configure the 
 1. __Name:__ Select the name of your sensor for easy identification.
 2. __Bus ID:__ Select the I2C bus to which the sensor is connected. Depending on your wiring and SBC can be different.
 3. __I2C address:__ I2C address (7-bit) hexdecimal address(0x##). BMP/BME280 sensor have fixed 0x77 or 0x76. You can check your sensor id by using i2c-tools typing ``i2cdetect -y <busnum>``
-4. __Topic:__ Topic field set on the input message. If this field is empty topic will not be included in the output msg. By configuring the node this input msg topic will be reused.
+4. __Topic:__ Topic field set on the output message. If this field is empty, topic will not be included in the output msg. By configuring the node this way input msg topic will be reused.
 4. __Extra:__ Check box to indicate the node to compute extra information each time a read is requested.
 
 
 After configuration and deployment the node will init the sensor and will identify if BME280 or BMP280 variant is detected.  
 
 ### Reading Sensor Data
-As in other node-red nodes the actual measurement of sensor data require that an input msg arrive to the node. The input called __Trigger__ will start the reading of sensor data will send the data in the node's output.
+As in other node-red nodes the actual measurement of sensor data require that an input msg arrive to the node. The input called __Trigger__ will start the reading of sensor data will send the data in the node's output. The input __msg is reused__ so any property on the input msg (with the exception of payload and topic if set) will be redirected without modification to the output.
 
 The __output__ will have the following format:
 
 ```
 msg = {
-  _id: <node-red msg_id>,
+  _msgid: <node-red msg_id>,
   topic: <defined topic>,
   payload: {
     model: "BME280"  or  "BMP280",
     temperature_C: <float in celsius>,
-    humidity: <float in %>,
+    humidity: <float in %>, // Only present if model == "BME280"
     pressure_hPa: <float in hPa>
   }
 }
@@ -62,15 +62,15 @@ msg = {
 
 payload: {
      ....
-     heatIndex: <float in celsius>,
-     dewPoint_C= <float in celsius>,
+     heatIndex: <float in celsius>, // Only present if model == "BME280"
+     dewPoint_C= <float in celsius>, // Only present if model == "BME280"
      altitude_M= <float in Meters>,
      temperature_F=<float in fahrenheit>
      pressure_Hg=<float in mm of mercury>
 }
 
 ```
-__Note__: BMP280 version __WILL NOT__ report humidity information the sensor do not provide this information. humidity will be always be read as __0__.
+__Note__: BMP280 version __WILL NOT__ report humidity information the sensor do not provide this information. humidity, heatIndex & dewPoint_C will not be __present__ in the payload.
 
 
 ## Notes
@@ -87,5 +87,7 @@ BPM280 & BME280 has been tested using different breakout from cheap providers. O
     - Topic configurable to help MQTT integration
     - Input msg will be reused to enable better HTTP node integration.
     - Documentation improvements
+    - Added some examples.
+
 * 0.0.2 Solved npm repository name.
 * 0.0.1 First version
