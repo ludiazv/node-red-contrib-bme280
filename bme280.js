@@ -6,14 +6,13 @@ module.exports = function(RED) {
   function Bme280(n) {
     RED.nodes.createNode(this,n);
     var node = this;
-    //var context=this.context();
 
     node.bus=parseInt(n.bus);
     node.addr=parseInt(n.address,16);
     node.topic= n.topic || "";
     node.extra=n.extra || false;
     node.initialized=false;
-
+    node.isBME=false;
 
     // init the sensor
     node.status({fill:"grey",shape:"ring",text:"Init..."});
@@ -22,8 +21,9 @@ module.exports = function(RED) {
     node.sensor.init().then( function (ID) {
         node.initialized=true;
         node.type= ID==BME280.CHIP_ID_BME280() ? "BME280" : "BMP280";
-        node.status({fill:"green",shape:"dot",text:node.type+" Initialized!"});
-        node.log("Running " + node.type);
+        node.isBME= (node.type == "BME280");
+        node.status({fill:"green",shape:"dot",text:node.type+" ready"});
+        node.log("Sensor " + node.type + " initialized.");
     }).catch(function(err) {
         node.status({fill:"red",shape:"ring",text: "Sensor Init Failed"});
         node.error("Sensor Init failed ->" + err);
@@ -32,14 +32,14 @@ module.exports = function(RED) {
     node.on('input',function(_msg) {
        if(!node.initialized) return null;
        node.sensor.readSensorData().then(function(data){
-         //var msg={_msgid:RED.util.generateId(),topic:"bme280",payload:data};
+
          _msg.payload=data;
          data.model=node.type;
-         if(node.type != "BME280" && _msg.payload.humidity !== undefined) delete _msg.payload.humidity;
+         if(!node.isBME && _msg.payload.humidity !== undefined) delete _msg.payload.humidity;
          if(node.topic !== undefined && node.topic != "") _msg.topic=node.topic;
          if(node.extra) {
            var pl=_msg.payload;
-           if(node.type == "BME280") {
+           if(node.isBME) {
              pl.heatIndex=BME280.calculateHeatIndexCelcius(data.temperature_C,data.humidity);
              pl.dewPoint_C=BME280.calculateDewPointCelcius(data.temperature_C,data.humidity);
            }
@@ -48,7 +48,9 @@ module.exports = function(RED) {
            pl.pressure_Hg=BME280.convertHectopascalToInchesOfMercury(data.pressure_hPa);
          }
          node.send(_msg);
-         node.status({fill:"green",shape:"dot",text:node.type+" T:"+Math.floor(data.temperature_C)+"C/ H%:" + Math.floor(data.humidity) +"%"});
+         var sText=node.type+"[Tcº:"+Math.round(data.temperature_C);
+         if(node.isBME) sText+=("/H%:"+Math.round(data.humidity));
+         node.status({fill:"green",shape:"dot",text:sText+"]"});
        }).catch(function(err) {
          node.status({fill:"red",shape:"ring",text:"Sensor reading failed"});
          node.error("Failed to read data ->" + err);
