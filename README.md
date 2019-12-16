@@ -82,6 +82,12 @@ BPM280 & BME280 has been tested using different breakout from cheap providers. O
 
 ## Change log
 
+* 0.0.5
+    - Fix #2 for nodejs >=13 compatibility
+
+* 0.0.4
+    - Improve node status messages.
+
 * 0.0.3
     - Custom Icon
     - Topic configurable to help MQTT integration
