@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-bme280",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Node for BME280/BMP280 sensors for SBCs gpios",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
