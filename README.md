@@ -82,6 +82,9 @@ BPM280 & BME280 has been tested using different breakout from cheap providers. O
 
 ## Change log
 
+* 0.1.0 Stable version
+    - Sensor init is done also in input trigger for better stability.
+
 * 0.0.5
     - Fix #2 for nodejs >=13 compatibility
 
