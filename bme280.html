@@ -23,6 +23,12 @@
      <label for="node-input-extra"><i class="fa fa-check"></i> Extra Data</label>
      <input type="checkbox" id="node-input-extra" style="width: 60%;" />
   </div>
+
+  <div class="form-row">
+    <label for="node-input-preasure"><i class="fa fa-tag"></i> Topic</label>
+    <input type="text" id="node-input-preasure">
+  </div>
+
 </script>
 
 <script type="text/javascript">
@@ -38,8 +44,9 @@
         return v.length==4 && v[0]=="0" && v[1].toUpperCase()=="X" && !isNan(n) &&
         n>=0x10 && n<0x78;
       }},
-      topic: {value:'bme280', required:false },
-      extra:{value:false, required: true}
+      topic: { value:'bme280', required:false },
+      extra: { value:false, required: true},
+      preasure:{ value:1013.25, required: false, validate: RED.validators.number() }
     },
     outputs:1,
     inputs:1,
