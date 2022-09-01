@@ -41,7 +41,7 @@
       bus:   {value:"1", required: true, validate: RED.validators.number() },
       address: {value: "0x76", required:true, validate: function(v) {
         var n=parseInt(v,16);
-        return v.length==4 && v[0]=="0" && v[1].toUpperCase()=="X" && !isNan(n) &&
+        return v.length==4 && v[0]=="0" && v[1].toUpperCase()=="X" && !isNaN(n) &&
         n>=0x10 && n<0x78;
       }},
       topic: { value:'bme280', required:false },
