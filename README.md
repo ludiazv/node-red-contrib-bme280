@@ -37,7 +37,7 @@ After installation place your Bme280 node in any of your flow and configure the 
 3. __I2C address:__ I2C address (7-bit) hexdecimal address(0x##). BMP/BME280 sensor have fixed 0x77 or 0x76. You can check your sensor id by using i2c-tools typing ``i2cdetect -y <busnum>``
 4. __Topic:__ Topic field set on the output message. If this field is empty, topic will not be included in the output msg. By configuring the node this way input msg topic will be reused.
 4. __Extra:__ Check box to indicate the node to compute extra information each time a read is requested.
-
+5. __Sea Preasure:__ If extra information provided this parameter is used for correction. The value is in hPa.
 
 After configuration and deployment the node will init the sensor and will identify if BME280 or BMP280 variant is detected.  
 
@@ -81,6 +81,12 @@ BPM280 & BME280 has been tested using different breakout from cheap providers. O
 
 
 ## Change log
+
+
+* 1.1.0 Stable version
+    - Added max init retries to avoid continous use of I2C bus
+    - Added message bypass in case of error.
+    - Added parameter for sea level presasure to calculate properly altitude.
 
 * 1.0.0 Stable version
     - Sensor init is done also in input trigger for better stability.
